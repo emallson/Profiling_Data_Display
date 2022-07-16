@@ -1,0 +1,130 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`buildTree should build a toy tree successfully 1`] = `
+Object {
+  "children": Object {
+    "BattleGroundEnemies": Object {
+      "children": Object {
+        "BattleGroundEnemies.Allies": Object {
+          "children": Object {
+            "BattleGroundEnemies.Allies.24ef2416520": Object {
+              "children": Object {
+                "BattleGroundEnemies.Allies.24ef2416520.24ef242a7b0": Object {
+                  "children": Object {
+                    "OnHide": Object {
+                      "children": Object {},
+                      "name": "OnHide",
+                      "value": "BattleGroundEnemies.Allies.24ef2416520.24ef242a7b0/BattleGroundEnemies.Allies.24ef2416520/BattleGroundEnemies.Allies/BattleGroundEnemies:OnHide",
+                    },
+                  },
+                  "name": "BattleGroundEnemies.Allies.24ef2416520.24ef242a7b0",
+                  "value": undefined,
+                },
+              },
+              "name": "BattleGroundEnemies.Allies.24ef2416520",
+              "value": undefined,
+            },
+          },
+          "name": "BattleGroundEnemies.Allies",
+          "value": undefined,
+        },
+      },
+      "name": "BattleGroundEnemies",
+      "value": undefined,
+    },
+    "UIParent": Object {
+      "children": Object {
+        "BigWigsProximityAnchor": Object {
+          "children": Object {
+            "BigWigsProximityAnchor.24f59eea100": Object {
+              "children": Object {
+                "OnEnter": Object {
+                  "children": Object {},
+                  "name": "OnEnter",
+                  "value": "BigWigsProximityAnchor.24f59eea100/BigWigsProximityAnchor/UIParent:OnEnter",
+                },
+              },
+              "name": "BigWigsProximityAnchor.24f59eea100",
+              "value": undefined,
+            },
+          },
+          "name": "BigWigsProximityAnchor",
+          "value": undefined,
+        },
+        "WeakAurasFrame": Object {
+          "children": Object {
+            "WeakAurasFrame.24ef3d108a0": Object {
+              "children": Object {
+                "WeakAurasFrame.24ef3d108a0.24ef3d121f0": Object {
+                  "children": Object {
+                    "OnSizeChanged": Object {
+                      "children": Object {},
+                      "name": "OnSizeChanged",
+                      "value": "WeakAurasFrame.24ef3d108a0.24ef3d121f0/WeakAurasFrame.24ef3d108a0/WeakAurasFrame/UIParent:OnSizeChanged",
+                    },
+                  },
+                  "name": "WeakAurasFrame.24ef3d108a0.24ef3d121f0",
+                  "value": undefined,
+                },
+              },
+              "name": "WeakAurasFrame.24ef3d108a0",
+              "value": undefined,
+            },
+            "WeakAurasFrame.24ef9e33540": Object {
+              "children": Object {
+                "WeakAurasFrame.24ef9e33540.24ef9e369c0": Object {
+                  "children": Object {
+                    "OnSizeChanged": Object {
+                      "children": Object {},
+                      "name": "OnSizeChanged",
+                      "value": "WeakAurasFrame.24ef9e33540.24ef9e369c0/WeakAurasFrame.24ef9e33540/WeakAurasFrame/UIParent:OnSizeChanged",
+                    },
+                  },
+                  "name": "WeakAurasFrame.24ef9e33540.24ef9e369c0",
+                  "value": undefined,
+                },
+              },
+              "name": "WeakAurasFrame.24ef9e33540",
+              "value": undefined,
+            },
+            "WeakAurasFrame.24f4f0164d0": Object {
+              "children": Object {
+                "WeakAurasFrame.24f4f0164d0.24f4f01a9e0": Object {
+                  "children": Object {
+                    "OnSizeChanged": Object {
+                      "children": Object {},
+                      "name": "OnSizeChanged",
+                      "value": "WeakAurasFrame.24f4f0164d0.24f4f01a9e0/WeakAurasFrame.24f4f0164d0/WeakAurasFrame/UIParent:OnSizeChanged",
+                    },
+                  },
+                  "name": "WeakAurasFrame.24f4f0164d0.24f4f01a9e0",
+                  "value": undefined,
+                },
+              },
+              "name": "WeakAurasFrame.24f4f0164d0",
+              "value": undefined,
+            },
+            "WeakAurasFrame.24f4f039dd0": Object {
+              "children": Object {
+                "OnSizeChanged": Object {
+                  "children": Object {},
+                  "name": "OnSizeChanged",
+                  "value": "WeakAurasFrame.24f4f039dd0/WeakAurasFrame/UIParent:OnSizeChanged",
+                },
+              },
+              "name": "WeakAurasFrame.24f4f039dd0",
+              "value": undefined,
+            },
+          },
+          "name": "WeakAurasFrame",
+          "value": undefined,
+        },
+      },
+      "name": "UIParent",
+      "value": undefined,
+    },
+  },
+  "name": "root",
+  "value": undefined,
+}
+`;
