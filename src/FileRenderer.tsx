@@ -64,6 +64,14 @@ const alternatingTableRow = css`
   }
 `;
 
+function formatDuration(seconds: number): string {
+  if (seconds >= 60) {
+    return `${Math.floor(seconds / 60)}m ${seconds % 60}s`;
+  }
+
+  return `${seconds}s`;
+}
+
 const FrameCreationsTable = () => {
   const recording = useSelectedRecording();
 
@@ -76,7 +84,9 @@ const FrameCreationsTable = () => {
       | FrameCreation
       | NamedFrameCreation
     )[]
-  ).concat(Object.values(recording.data.CreateFrame.named));
+  )
+    .concat(Object.values(recording.data.CreateFrame.named))
+    .sort((a, b) => a.creationTime - b.creationTime);
 
   return (
     <details>
@@ -91,7 +101,7 @@ const FrameCreationsTable = () => {
           <tr>
             <td>Frame Name</td>
             <td>Frame Type</td>
-            <td>Creation Time</td>
+            <td>Time of Creation</td>
             <td>Parent</td>
             <td>Template</td>
           </tr>
@@ -101,7 +111,11 @@ const FrameCreationsTable = () => {
             <tr key={ix}>
               <td>{"name" in frame ? frame.name : <em>Anonymous</em>}</td>
               <td>{frame.frameType}</td>
-              <td></td>
+              <td>
+                {formatDuration(
+                  frame.creationTime - recording.encounter.startTime
+                )}
+              </td>
               <td>{frame.parent}</td>
               <td>{frame.template}</td>
             </tr>
@@ -113,7 +127,8 @@ const FrameCreationsTable = () => {
 };
 
 const AddonTable = () => {
-  const addon = useSelectedRecording()?.data.addon;
+  const recording = useSelectedRecording();
+  const addon = recording?.data.addon;
 
   const entries = useMemo(
     () =>
@@ -127,6 +142,13 @@ const AddonTable = () => {
   if (!addon) {
     return null;
   }
+
+  // this value is already in seconds
+  const totalTime = recording.encounter.endTime - recording.encounter.startTime;
+
+  // number of frames that should be rendered at 60 fps
+  const frameCount = totalTime * 60;
+  const frameLength = 1000 / 60;
 
   return (
     <details>
@@ -147,6 +169,7 @@ const AddonTable = () => {
             <td>Addon Name</td>
             <td>Reported Time (ms)</td>
             <td>Combat Time (%)</td>
+            <td>Time per Frame @ 60 FPS (ms)</td>
             <td>60 FPS Frame Time (%)</td>
           </tr>
         </thead>
@@ -155,8 +178,11 @@ const AddonTable = () => {
             <tr key={key} className={alternatingTableRow}>
               <td>{entry.name}</td>
               <td>{entry.time.toFixed(2)}</td>
-              <td>??</td>
-              <td>??</td>
+              <td>{((entry.time / (totalTime * 1000)) * 100).toFixed(2)}</td>
+              <td>{(entry.time / frameCount).toFixed(2)}</td>
+              <td>
+                {((entry.time / frameCount / frameLength) * 100).toFixed(2)}
+              </td>
             </tr>
           ))}
         </tbody>

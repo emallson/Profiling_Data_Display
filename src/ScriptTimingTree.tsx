@@ -6,7 +6,6 @@ import { build, FrameTree } from "./tree";
 
 type TimingEntry = {
   callCount?: number;
-  selfTime: number;
   totalTime: number;
 };
 
@@ -19,13 +18,17 @@ function toTimingTree(
 
   const originalEntry = sourceTree.value?.[1];
 
-  const value = originalEntry ?? {
-    selfTime: 0,
-    totalTime: children.reduce(
-      (totalTime, [, value]) => value.value.totalTime + totalTime,
-      0
-    ),
-  };
+  const value = originalEntry
+    ? {
+        callCount: originalEntry.callCount,
+        totalTime: originalEntry.debugTime,
+      }
+    : {
+        totalTime: children.reduce(
+          (totalTime, [, value]) => value.value.totalTime + totalTime,
+          0
+        ),
+      };
 
   return {
     ...sourceTree,

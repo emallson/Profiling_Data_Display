@@ -6,12 +6,14 @@ export type BossEncounter = {
   success: boolean;
   difficultyId: number;
   startTime: number;
+  endTime: number;
   groupSize: number;
 };
 
 export type DungeonEncounter = {
   encounterName: string;
   startTime: number;
+  endTime: number;
   mapId: number;
 };
 
@@ -38,7 +40,7 @@ export type AddonTimings = {
 
 export type ScriptTiming = {
   callCount: number;
-  selfTime: number;
+  debugTime: number;
   totalTime: number;
 };
 
@@ -48,6 +50,7 @@ export type ScriptTimings = {
 
 export type FrameCreation = {
   frameType: string;
+  creationTime: number;
   parent?: string;
   template?: string;
 };
