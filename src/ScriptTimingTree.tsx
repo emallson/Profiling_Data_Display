@@ -125,6 +125,12 @@ const ExpandButton = () => {
   );
 };
 
+const ClearFocusButton = () => {
+  const clearFocus = useStoreKey("clearFocusedNode");
+
+  return <button onClick={() => clearFocus()}>Clear Focus</button>;
+};
+
 export default function ScriptTimingTree(): JSX.Element | null {
   const recording = useSelectedRecording();
 
@@ -162,7 +168,9 @@ export default function ScriptTimingTree(): JSX.Element | null {
         node={node}
         parentTime={node.value.totalTime}
       />
-      <ExpandButton />
+      <div>
+        <ExpandButton /> {focusedNode && <ClearFocusButton />}
+      </div>
     </TreeContainer>
   );
 }
