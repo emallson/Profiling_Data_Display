@@ -20,12 +20,16 @@ const Container = styled.div`
     "sidebar encounter"
     "sidebar addons"
     "sidebar functions"
-    "sidebar frames";
+    "sidebar frames"
+    "sidebar empty";
   grid-template-columns: max-content minmax(0, 1fr);
   height: 100%;
   max-width: 100vw;
   gap: 1rem;
   padding-right: 1rem;
+  grid-template-rows: repeat(4, max-content) 1fr;
+  align-items: start;
+  align-content: start;
 `;
 
 const formatStartTime = (startTime: number) => {
