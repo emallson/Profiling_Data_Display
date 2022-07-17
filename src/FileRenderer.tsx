@@ -3,7 +3,11 @@ import { styled } from "@linaria/react";
 import { useEffect, useMemo } from "react";
 import type { Encounter, FrameCreation, NamedFrameCreation } from "./lua";
 import ScriptTimingTree from "./ScriptTimingTree";
-import useStore, { useProfilingData, useSelectedRecording } from "./store";
+import useStore, {
+  useProfilingData,
+  useSelectedRecording,
+  useStoreKey,
+} from "./store";
 
 const Container = styled.div`
   display: grid;
@@ -191,6 +195,21 @@ const AddonTable = () => {
   );
 };
 
+const ClearButton = () => {
+  const reset = useStoreKey("clearProfilingData");
+
+  return (
+    <button
+      className={css`
+        margin-bottom: 1rem;
+      `}
+      onClick={reset}
+    >
+      Clear
+    </button>
+  );
+};
+
 const Sidebar = () => {
   const data = useProfilingData();
   const selectEncounter = useStore((state) => state.selectRecording);
@@ -204,6 +223,7 @@ const Sidebar = () => {
         height: 100%;
       `}
     >
+      <ClearButton />
       {data?.recordings.map(({ encounter }, index) => (
         <EncounterEntry
           key={encounter.startTime}

@@ -1,6 +1,8 @@
 import create, { StateCreator } from "zustand";
 import { devtools } from "zustand/middleware";
 import type { ProfilingData, Recording } from "../lua";
+import { TimingEntry } from "../ScriptTimingTree";
+import { FrameTree } from "../tree";
 
 export type DataState = {
   setProfilingData: (data: ProfilingData) => void;
@@ -30,11 +32,26 @@ export type ViewState = {
   selectedRecordingIndex?: number;
   resetView: () => void;
   selectRecording: (index: number) => void;
+  focusedNode?: FrameTree<TimingEntry>;
+  clearFocusedNode: () => void;
+  setFocusedNode: (node: FrameTree<TimingEntry>) => void;
+  expandScriptTimingChart: boolean;
+  setExpandScriptTimingChart: (value: boolean) => void;
 };
 
 const createViewSlice: SliceCreator<ViewState> = (set) => ({
-  resetView: () => set({ selectedRecordingIndex: undefined }),
+  resetView: () =>
+    set({
+      expandScriptTimingChart: false,
+      focusedNode: undefined,
+      selectedRecordingIndex: undefined,
+    }),
   selectRecording: (index: number) => set({ selectedRecordingIndex: index }),
+  clearFocusedNode: () => set({ focusedNode: undefined }),
+  setFocusedNode: (node) => set({ focusedNode: node }),
+  expandScriptTimingChart: false,
+  setExpandScriptTimingChart: (value) =>
+    set({ expandScriptTimingChart: value }),
 });
 
 export type State = DataState & ViewState;
@@ -47,6 +64,13 @@ const useStore = create<State>()(
 );
 
 export default useStore;
+
+// dunno how i feel about this pattern, but it is a convenient shorthand.
+// trading one class of error (changing one var name but not the () => state.foo
+// part) for another (stringly state access).
+export function useStoreKey<Key extends keyof State>(key: Key): State[Key] {
+  return useStore((state) => state[key]);
+}
 
 export const useProfilingData: () => ProfilingData | undefined = () =>
   useStore((state) => state.profilingData);

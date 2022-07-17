@@ -1,10 +1,10 @@
 import { styled } from "@linaria/react";
-import { useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { ScriptTiming } from "./lua";
-import { useSelectedRecording } from "./store";
+import useStore, { useSelectedRecording, useStoreKey } from "./store";
 import { build, FrameTree } from "./tree";
 
-type TimingEntry = {
+export type TimingEntry = {
   callCount?: number;
   totalTime: number;
 };
@@ -70,13 +70,28 @@ function TimingTreeNode({
 }) {
   const width = node.value.totalTime / parentTime;
 
+  const focusedNode = useStore((state) => state.focusedNode);
+  const setFocusedNode = useStore((state) => state.setFocusedNode);
+  const clearFocusedNode = useStore((state) => state.clearFocusedNode);
+
+  const onClick = useCallback(() => {
+    if (focusedNode === node) {
+      clearFocusedNode();
+    } else {
+      setFocusedNode(node);
+    }
+  }, [focusedNode, setFocusedNode, clearFocusedNode]);
+
   if (node.value.totalTime < 1) {
     return null;
   }
 
   return (
     <ChildNode style={{ width: `${width * 100}%` }}>
-      <NodeLabel title={`${node.name} (${node.value.totalTime.toFixed(2)} ms)`}>
+      <NodeLabel
+        title={`${node.name} (${node.value.totalTime.toFixed(2)} ms)`}
+        onClick={onClick}
+      >
         {node.name}
       </NodeLabel>
       <ChildContainer>
@@ -99,6 +114,9 @@ const TreeContainer = styled.details`
 export default function ScriptTimingTree(): JSX.Element | null {
   const recording = useSelectedRecording();
 
+  const focusedNode = useStoreKey("focusedNode");
+  const clearFocusedNode = useStoreKey("clearFocusedNode");
+
   const tree = useMemo(
     () =>
       recording &&
@@ -106,9 +124,15 @@ export default function ScriptTimingTree(): JSX.Element | null {
     [recording]
   );
 
+  useEffect(() => {
+    clearFocusedNode();
+  }, [tree]);
+
   if (!tree) {
     return null;
   }
+
+  const node = focusedNode ?? tree;
 
   return (
     <TreeContainer>
@@ -118,7 +142,7 @@ export default function ScriptTimingTree(): JSX.Element | null {
         frame (except for a few unhookable internal frames).
       </p>
       <p>Subtrees that took less than 1ms of script time are not shown.</p>
-      <TimingTreeNode node={tree} parentTime={tree.value.totalTime} />
+      <TimingTreeNode node={node} parentTime={node.value.totalTime} />
     </TreeContainer>
   );
 }
