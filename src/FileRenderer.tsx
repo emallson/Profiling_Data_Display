@@ -230,7 +230,6 @@ const AddonTable = () => {
             <td>Reported Time (ms)</td>
             <td>Combat Time (%)</td>
             <td>Time per Frame @ 60 FPS (ms)</td>
-            <td>60 FPS Frame Time (%)</td>
           </tr>
         </thead>
         <tbody>
@@ -240,9 +239,6 @@ const AddonTable = () => {
               <td>{entry.time.toFixed(2)}</td>
               <td>{((entry.time / (totalTime * 1000)) * 100).toFixed(2)}</td>
               <td>{(entry.time / frameCount).toFixed(2)}</td>
-              <td>
-                {((entry.time / frameCount / frameLength) * 100).toFixed(2)}
-              </td>
             </tr>
           ))}
         </tbody>
