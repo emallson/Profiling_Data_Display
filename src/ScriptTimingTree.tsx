@@ -82,7 +82,7 @@ function TimingTreeNode({
     } else {
       setFocusedNode(node);
     }
-  }, [focusedNode, setFocusedNode, clearFocusedNode]);
+  }, [node, focusedNode, setFocusedNode, clearFocusedNode]);
 
   if (node.value.totalTime < 1) {
     return null;
@@ -147,7 +147,7 @@ export default function ScriptTimingTree(): JSX.Element | null {
 
   useEffect(() => {
     clearFocusedNode();
-  }, [tree]);
+  }, [tree, clearFocusedNode]);
 
   if (!tree) {
     return null;
