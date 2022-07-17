@@ -64,7 +64,9 @@ const ChildNode = styled.div`
 function TimingTreeNode({
   node,
   parentTime,
+  expanded,
 }: {
+  expanded?: boolean;
   parentTime: number;
   node: FrameTree<TimingEntry>;
 }) {
@@ -87,7 +89,7 @@ function TimingTreeNode({
   }
 
   return (
-    <ChildNode style={{ width: `${width * 100}%` }}>
+    <ChildNode style={{ width: `${width * 100 * (expanded ? 2 : 1)}%` }}>
       <NodeLabel
         title={`${node.name} (${node.value.totalTime.toFixed(2)} ms)`}
         onClick={onClick}
@@ -109,13 +111,26 @@ function TimingTreeNode({
 
 const TreeContainer = styled.details`
   max-width: 100%;
+  overflow-x: auto;
 `;
+
+const ExpandButton = () => {
+  const setExpanded = useStoreKey("setExpandScriptTimingChart");
+  const isExpanded = useStoreKey("expandScriptTimingChart");
+
+  return (
+    <button onClick={() => setExpanded(!isExpanded)}>
+      {isExpanded ? "Zoom Out" : "Zoom In"}
+    </button>
+  );
+};
 
 export default function ScriptTimingTree(): JSX.Element | null {
   const recording = useSelectedRecording();
 
   const focusedNode = useStoreKey("focusedNode");
   const clearFocusedNode = useStoreKey("clearFocusedNode");
+  const isExpanded = useStoreKey("expandScriptTimingChart");
 
   const tree = useMemo(
     () =>
@@ -142,7 +157,12 @@ export default function ScriptTimingTree(): JSX.Element | null {
         frame (except for a few unhookable internal frames).
       </p>
       <p>Subtrees that took less than 1ms of script time are not shown.</p>
-      <TimingTreeNode node={node} parentTime={node.value.totalTime} />
+      <TimingTreeNode
+        expanded={isExpanded}
+        node={node}
+        parentTime={node.value.totalTime}
+      />
+      <ExpandButton />
     </TreeContainer>
   );
 }

@@ -1,7 +1,12 @@
 import { css } from "@linaria/core";
 import { styled } from "@linaria/react";
 import { useEffect, useMemo } from "react";
-import type { Encounter, FrameCreation, NamedFrameCreation } from "./lua";
+import {
+  Encounter,
+  FrameCreation,
+  isBossEncounter,
+  NamedFrameCreation,
+} from "./lua";
 import ScriptTimingTree from "./ScriptTimingTree";
 import useStore, {
   useProfilingData,
@@ -12,6 +17,7 @@ import useStore, {
 const Container = styled.div`
   display: grid;
   grid-template-areas:
+    "sidebar encounter"
     "sidebar addons"
     "sidebar functions"
     "sidebar frames";
@@ -62,12 +68,6 @@ const EncounterEntry = ({
   );
 };
 
-const alternatingTableRow = css`
-  &:nth-child(even) {
-    background-color: #eee;
-  }
-`;
-
 function formatDuration(seconds: number): string {
   if (seconds >= 60) {
     return `${Math.floor(seconds / 60)}m ${seconds % 60}s`;
@@ -75,6 +75,62 @@ function formatDuration(seconds: number): string {
 
   return `${seconds}s`;
 }
+
+const DescriptionList = styled.dl`
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0 1rem;
+`;
+
+const EncounterTable = () => {
+  const recording = useSelectedRecording();
+
+  if (!recording) {
+    return null;
+  }
+
+  const encounter = recording.encounter;
+
+  return (
+    <details>
+      <summary>Encounter Details</summary>
+      <DescriptionList>
+        <dt>Encounter/Map ID</dt>
+        <dd>
+          {isBossEncounter(encounter) ? encounter.encounterId : encounter.mapId}
+        </dd>
+        <dt>Encounter Name</dt>
+        <dd>{encounter.encounterName}</dd>
+        <dt>Start Time</dt>
+        <dd>{formatStartTime(encounter.startTime)}</dd>
+        <dt>End Time</dt>
+        <dd>{formatStartTime(encounter.endTime)}</dd>
+        <dt>Duration</dt>
+        <dd>{formatDuration(encounter.endTime - encounter.startTime)}</dd>
+        {isBossEncounter(encounter) ? (
+          <>
+            <dt>Result</dt>
+            <dd>{encounter.success ? "Kill" : "Wipe"}</dd>
+            <dt>Group Size</dt>
+            <dd>{encounter.groupSize}</dd>
+            <dt>Difficulty ID</dt>
+            <dd>{encounter.difficultyId}</dd>
+          </>
+        ) : null}
+      </DescriptionList>
+    </details>
+  );
+};
+
+const Table = styled.table`
+  tbody tr:nth-child(even) {
+    background-color: #eee;
+  }
+
+  td {
+    padding: 0 1rem;
+  }
+`;
 
 const FrameCreationsTable = () => {
   const recording = useSelectedRecording();
@@ -100,7 +156,7 @@ const FrameCreationsTable = () => {
         relatively expensive, and while it <em>can</em> be okay to create them
         in combat, creating a lot of them is likely to cause performance issues.
       </p>
-      <table>
+      <Table>
         <thead>
           <tr>
             <td>Frame Name</td>
@@ -125,7 +181,7 @@ const FrameCreationsTable = () => {
             </tr>
           ))}
         </tbody>
-      </table>
+      </Table>
     </details>
   );
 };
@@ -163,7 +219,7 @@ const AddonTable = () => {
         into Blizzard's APIs (such as time spent creating frames).
       </p>
       <p>Only addons that took at least 1ms of script time are shown.</p>
-      <table>
+      <Table>
         <thead
           className={css`
             font-weight: bold;
@@ -179,7 +235,7 @@ const AddonTable = () => {
         </thead>
         <tbody>
           {entries?.map(([key, entry]) => (
-            <tr key={key} className={alternatingTableRow}>
+            <tr key={key}>
               <td>{entry.name}</td>
               <td>{entry.time.toFixed(2)}</td>
               <td>{((entry.time / (totalTime * 1000)) * 100).toFixed(2)}</td>
@@ -190,7 +246,7 @@ const AddonTable = () => {
             </tr>
           ))}
         </tbody>
-      </table>
+      </Table>
     </details>
   );
 };
@@ -245,6 +301,7 @@ export default function FileRenderer(): JSX.Element {
   return (
     <Container>
       <Sidebar />
+      <EncounterTable />
       <AddonTable />
       <ScriptTimingTree />
       <FrameCreationsTable />
