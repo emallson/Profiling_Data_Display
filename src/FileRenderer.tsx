@@ -1,6 +1,7 @@
 import { css } from "@linaria/core";
 import { styled } from "@linaria/react";
 import { useEffect, useMemo } from "react";
+import FrameDataDisplay from "./FrameData";
 import {
   Encounter,
   FrameCreation,
@@ -302,6 +303,7 @@ export default function FileRenderer(): JSX.Element {
     <Container>
       <Sidebar />
       <EncounterTable />
+      <FrameDataDisplay />
       <AddonTable />
       <ScriptTimingTree />
       <FrameCreationsTable />

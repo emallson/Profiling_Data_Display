@@ -61,6 +61,44 @@ export type NamedFrameCreations = {
   [key: string]: NamedFrameCreation;
 };
 
+export enum EventRegistationType {
+  Registered = "R",
+  Unregistered = "U",
+}
+
+export type EventRegistration = {
+  type: EventRegistationType;
+  units?: string[];
+  frameIndex: number;
+};
+
+export type EventRegistrations = {
+  [eventName: string]: EventRegistration[];
+};
+
+export type EventRegistrationUpdates = {
+  [path: string]: EventRegistrations;
+};
+
+export type EventTimings = {
+  totalUsage: number;
+  updates: EventRegistrationUpdates;
+  usage: {
+    [eventName: string]: number;
+  };
+};
+
+export type FrameScriptTimings = {
+  [key: string]: number;
+};
+
+// slight abuse here as I'm assuming that every frame has at least one script
+// call. can't wait to get hoisted by that.
+export type FrameData = {
+  data: FrameScriptTimings[];
+  times: number[];
+};
+
 export type Recording = {
   encounter: Encounter;
   data: {
@@ -70,6 +108,8 @@ export type Recording = {
       anonymous: FrameCreation[];
       named: NamedFrameCreations;
     };
+    events: EventTimings;
+    frames: FrameData;
   };
 };
 
